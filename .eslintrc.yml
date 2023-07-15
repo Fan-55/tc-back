@@ -1,0 +1,51 @@
+parser: '@typescript-eslint/parser'
+root: true
+parserOptions:
+  project: ./tsconfig.json
+env:
+  es2020: true
+  mocha: true
+  node: true
+plugins:
+  - '@typescript-eslint'
+extends:
+  - airbnb-base
+  - eslint:recommended
+  - plugin:import/errors
+  - plugin:import/warnings
+  - plugin:import/typescript
+  - plugin:@typescript-eslint/recommended-type-checked
+rules:
+  lines-between-class-members:
+    - error
+    - always
+    - exceptAfterSingleLine: true                    # Save vertical space on class fields.
+  max-classes-per-file:
+    - error
+    - 2                                              # Allow 1 inner class.
+  no-shadow: off                                     # Aee https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-shadow.md
+  no-useless-constructor: off                        # See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-useless-constructor.md
+  no-underscore-dangle:                              # Allow private fields.
+    - off
+  require-await: off                                 # See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/require-await.md
+  import/extensions:                                 # To be removed. See https://github.com/benmosher/eslint-plugin-import/issues/1558
+    - error
+    - ignorePackages
+    - ts: never
+  import/no-extraneous-dependencies: off
+  import/prefer-default-export: off                  # Avoid default export to avoid refactoring when more than 1 export.
+  '@typescript-eslint/member-ordering': error        # Specifying class member ordering helps project maintenance.
+  '@typescript-eslint/naming-convention':            # Require all interfaces be prefixed with "I" (but does not allow "_I") to differentiate between classes and interfaces at a glance.
+    - error
+    - selector: interface
+      format:
+        - PascalCase
+      prefix:
+        - I
+  '@typescript-eslint/no-empty-function':
+    - error
+    - allow:
+      - constructors                                 # Allow disabling constructor succinctly.
+  '@typescript-eslint/no-shadow': error              # See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-shadow.md
+  '@typescript-eslint/no-useless-constructor': error # See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-useless-constructor.md
+  '@typescript-eslint/require-await': error          # See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/require-await.md

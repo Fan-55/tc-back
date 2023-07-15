@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "moduleResolution": "node16",
+    "outDir": "build",
+    "strict": true,
+    "target": "es2022",
+    "module": "Node16"
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
