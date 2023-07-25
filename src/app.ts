@@ -1,7 +1,7 @@
 // region Project Libraries
-import Server from './server';
+import ExpressServer from './infra/servers/ExpressServer';
 // endregion
 
-const server = new Server();
+const server = new ExpressServer();
 
 server.start();
