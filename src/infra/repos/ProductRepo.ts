@@ -35,6 +35,7 @@ interface IAddProduct {
 interface IProductRepo extends IRepo {
   readMany(queryOptions: IQueryOptions): Promise<Result<Product[]>>;
   updateStock(targets: IUpdateStockTarget[]): Promise<Result<boolean>>;
+  readById(id: number): Promise<Result<Product>>;
   add(product: IAddProduct): Promise<Result<boolean>>;
 }
 
@@ -92,6 +93,23 @@ class SequelizeStrategy implements IProductRepo {
     }
   }
 
+  async readById(id: number): Promise<Result<Product>> {
+    try {
+      await this.ensureConnection();
+      const foundProduct = await ProductModel.findByPk(id);
+      if (foundProduct) {
+        const mapProductResult = ProductMapper.ToDomain(foundProduct);
+        if (!mapProductResult.value) {
+          return Result.Fail('encountered unexpected error when ProductMapper.ToDomain while ProductRepo.readById', true);
+        }
+        return Result.Ok(mapProductResult.value);
+      }
+      return Result.Fail('Product not found');
+    } catch (e) {
+      return Result.Fail((e as Error).message ? (e as Error).message : 'encountered unexpected error when ProductRepo.readById', true);
+    }
+  }
+
   async add(product: IAddProduct): Promise<Result<boolean>> {
     try {
       await this.ensureConnection();
@@ -134,6 +152,10 @@ export class ProductRepo extends Repo {
 
   updateStock(targets: IUpdateStockTarget[]): Promise<Result<boolean>> {
     return (this.strategy as IProductRepo).updateStock(targets);
+  }
+
+  readById(id: number): Promise<Result<Product>> {
+    return (this.strategy as IProductRepo).readById(id);
   }
 
   add(product: IAddProduct): Promise<Result<boolean>> {
