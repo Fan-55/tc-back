@@ -1,15 +1,12 @@
 // region Platform Libraries
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 // endregion
 
 import { IBody } from './ILoginControllerRequestDto';
 import { LoginUseCase } from '../../../app/Login/LoginUseCase';
 import { UserRole } from '../../../base/domain/valueObjects/UserRole';
 import { ExpressController } from '../../../base/infra/ExpressController';
-
-dotenv.config();
 
 export class LoginController {
   private tokenSigningKey = process.env.TOKEN_SIGNING_KEY as string;
