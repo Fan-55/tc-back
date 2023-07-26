@@ -23,9 +23,19 @@ interface IUpdateStockTarget {
   quantity: number;
 }
 
+interface IAddProduct {
+  available: boolean;
+  name: string;
+  price: number;
+  description?: string;
+  stock: number;
+  sellerId: number;
+}
+
 interface IProductRepo extends IRepo {
   readMany(queryOptions: IQueryOptions): Promise<Result<Product[]>>;
   updateStock(targets: IUpdateStockTarget[]): Promise<Result<boolean>>;
+  add(product: IAddProduct): Promise<Result<boolean>>;
 }
 
 class SequelizeStrategy implements IProductRepo {
@@ -81,6 +91,24 @@ class SequelizeStrategy implements IProductRepo {
       return Result.Fail((e as Error).message ? (e as Error).message : 'encountered unexpected error when ProductRepo.updateStock', true);
     }
   }
+
+  async add(product: IAddProduct): Promise<Result<boolean>> {
+    try {
+      await this.ensureConnection();
+      await ProductModel.create({
+        name: product.name,
+        available: product.available,
+        price: product.price,
+        description: product.description,
+        stock: product.stock,
+        SellerId: product.sellerId,
+        image: 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20version%3D%221.1%22%20baseProfile%3D%22full%22%20width%3D%22640%22%20height%3D%22480%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22grey%22%2F%3E%3Ctext%20x%3D%22320%22%20y%3D%22240%22%20font-size%3D%2220%22%20alignment-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20fill%3D%22white%22%3E640x480%3C%2Ftext%3E%3C%2Fsvg%3E',
+      });
+      return Result.Ok(true);
+    } catch (e) {
+      return Result.Fail((e as Error).message ? (e as Error).message : 'encountered unexpected error when ProductRepo.add', true);
+    }
+  }
   // endregion
 
   private async ensureConnection(): Promise<void> {
@@ -106,5 +134,9 @@ export class ProductRepo extends Repo {
 
   updateStock(targets: IUpdateStockTarget[]): Promise<Result<boolean>> {
     return (this.strategy as IProductRepo).updateStock(targets);
+  }
+
+  add(product: IAddProduct): Promise<Result<boolean>> {
+    return (this.strategy as IProductRepo).add(product);
   }
 }
