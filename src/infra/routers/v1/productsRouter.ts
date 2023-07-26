@@ -5,6 +5,7 @@ import express from 'express';
 import {
   browseProductsController,
   readProductController,
+  editProductController,
   addProductController,
 } from '../../controllers';
 
@@ -13,6 +14,9 @@ const productsRouter = express.Router();
 productsRouter.route('/:id')
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   .get((req, res) => readProductController.execute(req, res))
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  .put((req, res) => editProductController.execute(req, res));
+
 productsRouter.route('/')
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   .get((req, res) => browseProductsController.execute(req, res))

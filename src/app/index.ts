@@ -2,6 +2,7 @@ import { BrowseProductsUseCase } from './BrowseProducts/BrowseProductsUseCase';
 import { CheckoutUseCase } from './Checkout/CheckoutUseCase';
 import { LoginUseCase } from './Login/LoginUseCase';
 import { ReadProductUseCase } from './ReadProduct/ReadProductUseCase';
+import { EditProductUseCase } from './EditProduct/EditProductUseCase';
 import { AddProductUseCase } from './AddProduct/AddProductUseCase';
 
 import {
@@ -14,6 +15,7 @@ const browseProductsUseCase = new BrowseProductsUseCase(productRepo);
 const checkoutUseCase = new CheckoutUseCase(productRepo);
 const loginUseCase = new LoginUseCase(buyerRepo, sellerRepo);
 const readProductUseCase = new ReadProductUseCase(productRepo);
+const editProductUseCase = new EditProductUseCase(productRepo);
 const addProductUseCase = new AddProductUseCase(productRepo);
 
 export {
@@ -21,5 +23,6 @@ export {
   checkoutUseCase,
   loginUseCase,
   readProductUseCase,
+  editProductUseCase,
   addProductUseCase,
 };

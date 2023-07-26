@@ -23,6 +23,14 @@ interface IUpdateStockTarget {
   quantity: number;
 }
 
+interface IEditedProduct {
+  available?: boolean;
+  name?: string;
+  price?: number;
+  description?: string;
+  stock?: number;
+}
+
 interface IAddProduct {
   available: boolean;
   name: string;
@@ -36,6 +44,7 @@ interface IProductRepo extends IRepo {
   readMany(queryOptions: IQueryOptions): Promise<Result<Product[]>>;
   updateStock(targets: IUpdateStockTarget[]): Promise<Result<boolean>>;
   readById(id: number): Promise<Result<Product>>;
+  editById(id: number, product: IEditedProduct): Promise<Result<boolean>>;
   add(product: IAddProduct): Promise<Result<boolean>>;
 }
 
@@ -110,6 +119,20 @@ class SequelizeStrategy implements IProductRepo {
     }
   }
 
+  async editById(id: number, product: IEditedProduct): Promise<Result<boolean>> {
+    try {
+      await this.ensureConnection();
+      await ProductModel.update(product, {
+        where: {
+          id,
+        },
+      });
+      return Result.Ok(true);
+    } catch (e) {
+      return Result.Fail((e as Error).message ? (e as Error).message : 'encountered unexpected error when ProductRepo.readById', true);
+    }
+  }
+
   async add(product: IAddProduct): Promise<Result<boolean>> {
     try {
       await this.ensureConnection();
@@ -156,6 +179,10 @@ export class ProductRepo extends Repo {
 
   readById(id: number): Promise<Result<Product>> {
     return (this.strategy as IProductRepo).readById(id);
+  }
+
+  editById(id: number, product: IEditedProduct): Promise<Result<boolean>> {
+    return (this.strategy as IProductRepo).editById(id, product);
   }
 
   add(product: IAddProduct): Promise<Result<boolean>> {
