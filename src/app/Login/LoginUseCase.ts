@@ -2,11 +2,12 @@ import { Result } from '../../base/Result';
 import { IUseCase } from '../../base/app/IUseCase';
 import { UserRole } from '../../base/domain/valueObjects/UserRole';
 import { Buyer } from '../../domain/entities/Buyer';
+import { Seller } from '../../domain/entities/Seller';
 import { BuyerRepo } from '../../infra/repos/BuyerRepo';
 import { SellerRepo } from '../../infra/repos/SellerRepo';
 import { ILoginUseCaseRequestDto } from './ILoginUseCaseRequestDto';
 
-export class LoginUseCase implements IUseCase<ILoginUseCaseRequestDto, Result<Buyer>> {
+export class LoginUseCase implements IUseCase<ILoginUseCaseRequestDto, Result<Buyer | Seller>> {
   private buyerRepo: BuyerRepo;
   private sellerRepo: SellerRepo;
 
@@ -15,7 +16,7 @@ export class LoginUseCase implements IUseCase<ILoginUseCaseRequestDto, Result<Bu
     this.sellerRepo = sellerRepo;
   }
 
-  async execute(dto: ILoginUseCaseRequestDto): Promise<Result<Buyer>> {
+  async execute(dto: ILoginUseCaseRequestDto): Promise<Result<Buyer | Seller>> {
     const { username, password, role } = dto;
     let userExistsResult;
     if (role === UserRole.Buyer) {

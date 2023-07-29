@@ -29,7 +29,7 @@ export class LoginController {
         this.tokenSigningKey,
         { expiresIn: '7D' },
       );
-      return ExpressController.Ok(res, { sellerId: userExistResult.value.entityProps.id, token });
+      return ExpressController.Ok(res, { userId: userExistResult.value.entityProps.id, token });
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : 'encountered unexpected error when LoginController.execute';
       return ExpressController.InternalServerError(res, errorMessage);
